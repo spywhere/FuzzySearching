@@ -14,11 +14,7 @@
 		"execution_units": {
 			"source.python": {
 				"python2run": 0,
-				"python3run": {
-					"name": "Run $working_name",
-					"description": "Run $working_name project",
-					"command": "python3 fuzzy.py"
-				}
+				"python3run": 0
 			},
 			"*": {
 				"terminal": 0,
@@ -26,6 +22,11 @@
 					"name": "Run $working_name Tests",
 					"description": "Run unit testing on $working_name project",
 					"command": "python3 tests/run_tests.py"
+				},
+				"runproject": {
+					"name": "Run $working_name",
+					"description": "Run $working_name project",
+					"command": "python3 fuzzy.py"
 				}
 			}
 		}
