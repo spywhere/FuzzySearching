@@ -9,8 +9,10 @@ def generate_collections():
 
 
 def run():
+    limit = 20
     collection = generate_collections()
     fuzzy = Fuzzy(collection)
+    print(fuzzy)
     while True:
         search = input("> ")
         if not search:
@@ -23,9 +25,11 @@ def run():
             len(result) + remain,
             time.time() - start_time
         ))
+        has_more = len(result) > limit
+        result = result[:limit]
         for text in result:
-            print(" " * 2 + text)
-        if remain:
+            print("%s%s [%s]" % (" " * 2, text[1], text[0]))
+        if has_more:
             print(" " * 2 + "...")
 
 
