@@ -4,17 +4,21 @@ class Fuzzy:
         self.weight = {
             # + Matched character
             "match": 1,
+            # + Exact position
+            "exact": 1.5,
             # - Offset character
             "offset": 1,
             # - Mismatched character
             "mismatch": 1,
+            # - Casing mismatch
+            "case_mismatch": -1,
             # - Target > Source length
             "length": 0,
             # - Unmatched source character
             "source_unmatch": 1,
             # - Unmatched target character
-            "target_unmatch": 0.1,
-            # - Match completion reward
+            "target_unmatch": 1,
+            # + Match completion reward
             "complete_reward": 0
         }
         self.last_term = ""
@@ -51,7 +55,11 @@ class Fuzzy:
         while source < len(term) and last_match < len(text):
             if term[source] and term[source] not in text[last_match:]:
                 return (None, [])
-            if term[source] == text[target]:
+            if term[source].lower() == text[target].lower():
+                if term[source] != text[target]:
+                    score -= self.weight["case_mismatch"]
+                if source == target:
+                    score += self.weight["exact"]
                 score += self.weight["match"]
                 score -= abs(source - target) * self.weight["offset"]
                 source += 1
@@ -65,7 +73,7 @@ class Fuzzy:
                 target = last_match
         score -= (len(term) - source) * self.weight["source_unmatch"]
         score -= (len(text) - last_match) * self.weight["target_unmatch"]
-        if last_match == len(text):
+        if source == len(term) and last_match == len(text):
             score += self.weight["complete_reward"]
         return (score, matches)
 
